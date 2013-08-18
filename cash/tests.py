@@ -6,6 +6,7 @@ import mock
 
 from django.test import TestCase
 from django.template import Template, Context
+from django.core.cache import cache
 
 
 class TemplateTagTest(TestCase):
@@ -15,12 +16,16 @@ class TemplateTagTest(TestCase):
                               alters_data=False,
                               silent_variable_failure=False)
 
+    def tearDown(self):
+        cache.clear()
+
     def render_template(self, template, **context):
         context.setdefault('func', self.func)
         return Template(template).render(Context(context))
 
     def test_cash_tag(self):
         template = "{% load cash %}{% cash %}{{ func }}{% endcash %}"
+        self.assertEqual(self.func.call_count, 0)
         rendered = self.render_template(template)
 
         self.assertEqual(rendered, 'test content')
@@ -31,6 +36,7 @@ class TemplateTagTest(TestCase):
 
     def test_cash_vary_on(self):
         template = "{% load cash %}{% cash on foo %}{{ func }}{% endcash %}"
+        self.assertEqual(self.func.call_count, 0)
 
         self.render_template(template, foo='bar')
         self.assertEqual(self.func.call_count, 1)
@@ -46,6 +52,7 @@ class TemplateTagTest(TestCase):
 
     def test_cash_on_multiple(self):
         template = "{% load cash %}{% cash on foo bar %}{{ func }}{% endcash %}"
+        self.assertEqual(self.func.call_count, 0)
 
         self.render_template(template, foo='bar', bar="a")
         self.assertEqual(self.func.call_count, 1)
@@ -64,6 +71,7 @@ class TemplateTagTest(TestCase):
 
     def test_cash_expiry(self):
         template = "{% load cash %}{% cash 1 %}{{ func }}{% endcash %}"
+        self.assertEqual(self.func.call_count, 0)
 
         self.render_template(template)
         self.assertEqual(self.func.call_count, 1)
