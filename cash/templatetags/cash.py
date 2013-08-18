@@ -59,22 +59,15 @@ def get_contents_until(parser, endtag):
 @register.tag('cash')
 def do_cash(parser, token):
     """
-    This will cache the contents of a template fragment for a given amount
-    of time.
+    This will cache the contents of a template fragment.
 
     Usage::
 
         {% load cash %}
-        {% cash [expire_time] [fragment_name] %}
+        {% cash [expire_time] [on [var1] [var2] ..] %}
             .. some expensive processing ..
         {% endcash %}
 
-    This tag also supports varying by a list of arguments::
-
-        {% load cash %}
-        {% cash [expire_time] [fragment_name] [var1] [var2] .. %}
-            .. some expensive processing ..
-        {% endcash %}
 
     Each unique set of arguments will result in a unique cache entry.
     """
