@@ -12,7 +12,7 @@ from cachet.utils import make_template_fragment_key
 register = Library()
 
 
-class CashNode(CacheNode):
+class CachetNode(CacheNode):
     def __init__(self, template, timeout_var=None, vary_on=tuple()):
         self.template = Template(template)
         self.contents = template
@@ -88,4 +88,4 @@ def do_cachet(parser, token):
             raise TemplateSyntaxError('Unknown argument for %r tag: %r.' %
                                       (tokens[0], option))
 
-    return CashNode(template=template, **kwargs)
+    return CachetNode(template=template, **kwargs)
