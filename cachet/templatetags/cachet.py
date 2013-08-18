@@ -13,9 +13,9 @@ register = Library()
 
 
 class CachetNode(CacheNode):
-    def __init__(self, template, timeout_var=None, vary_on=tuple()):
-        self.template = Template(template)
-        self.contents = template
+    def __init__(self, nodelist, contents, timeout_var=None, vary_on=tuple()):
+        self.nodelist = nodelist
+        self.contents = contents
         self.expire_time_var = timeout_var
         self.vary_on = vary_on
 
@@ -35,14 +35,19 @@ class CachetNode(CacheNode):
         cache_key = make_template_fragment_key(self.contents, vary_on)
         value = cache.get(cache_key)
         if value is None:
-            value = self.template.render(context)
+            value = self.nodelist.render(context)
             cache.set(cache_key, value, expire_time)
         return value
 
 
 def get_contents_until(parser, endtag):
+    """
+    Seeks ahead to grab all content almost verbatim without consuming anything.
+    """
+    index = 0
     while True:
-        token = parser.tokens.pop(0)
+        token = parser.tokens[index]
+        index += 1
         if token.contents == endtag:
             break
         if token.token_type == TOKEN_VAR:
@@ -71,7 +76,9 @@ def do_cachet(parser, token):
 
     Each unique set of arguments will result in a unique cache entry.
     """
-    template = ''.join(get_contents_until(parser, 'endcachet'))
+    contents = ''.join(get_contents_until(parser, 'endcachet'))
+    nodelist = parser.parse(('endcachet',))
+    parser.delete_first_token()
     kwargs = {}
 
     tokens = token.split_contents()
@@ -88,4 +95,4 @@ def do_cachet(parser, token):
             raise TemplateSyntaxError('Unknown argument for %r tag: %r.' %
                                       (tokens[0], option))
 
-    return CachetNode(template=template, **kwargs)
+    return CachetNode(nodelist=nodelist, contents=contents, **kwargs)

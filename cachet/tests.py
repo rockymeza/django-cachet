@@ -84,15 +84,15 @@ class TemplateTagTest(TestCase):
         self.render_template(template)
         self.assertEqual(self.func.call_count, 2)
 
-    def test_does_not_recompile_template(self):
+    def test_can_use_imported_templatetags(self):
         """
         Earlier versions of cachet were recompiling the templates which would
         cause any template tags that were loaded in to be lost.  This test has
         nothing to do with i18n, it is just conveniently avaiable.
         """
-        template = ("{% load cachet i18n %}"
-                    "{% cachet %}{% get_current_language %}{% endcachet %}"
-                    "{% endwith %}")
+        template = ("{% load cachet i18n %}{% cachet %}"
+                    "{% get_current_language as lang %}{{ lang }}"
+                    "{% endcachet %}")
         translation.activate('en')
         rendered = self.render_template(template)
         self.assertEqual(rendered, 'en')
