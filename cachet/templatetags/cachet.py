@@ -7,7 +7,7 @@ from django.template import (
 )
 from django.templatetags.cache import CacheNode
 
-from cash.utils import make_template_fragment_key
+from cachet.utils import make_template_fragment_key
 
 register = Library()
 
@@ -23,14 +23,14 @@ class CashNode(CacheNode):
         try:
             expire_time = self.expire_time_var.resolve(context)
         except VariableDoesNotExist:
-            raise TemplateSyntaxError('"cash" tag got an unknown variable: %r' % self.expire_time_var.var)
+            raise TemplateSyntaxError('"cachet" tag got an unknown variable: %r' % self.expire_time_var.var)
         except AttributeError:
             expire_time = None
         else:
             try:
                 expire_time = int(expire_time)
             except (ValueError, TypeError):
-                raise TemplateSyntaxError('"cash" tag got a non-integer timeout value: %r' % expire_time)
+                raise TemplateSyntaxError('"cachet" tag got a non-integer timeout value: %r' % expire_time)
         vary_on = [var.resolve(context) for var in self.vary_on]
         cache_key = make_template_fragment_key(self.contents, vary_on)
         value = cache.get(cache_key)
@@ -56,22 +56,22 @@ def get_contents_until(parser, endtag):
             yield '%}'
 
 
-@register.tag('cash')
-def do_cash(parser, token):
+@register.tag('cachet')
+def do_cachet(parser, token):
     """
     This will cache the contents of a template fragment.
 
     Usage::
 
-        {% load cash %}
-        {% cash [expire_time] [on [var1] [var2] ..] %}
+        {% load cachet %}
+        {% cachet [expire_time] [on [var1] [var2] ..] %}
             .. some expensive processing ..
-        {% endcash %}
+        {% endcachet %}
 
 
     Each unique set of arguments will result in a unique cache entry.
     """
-    template = ''.join(get_contents_until(parser, 'endcash'))
+    template = ''.join(get_contents_until(parser, 'endcachet'))
     kwargs = {}
 
     tokens = token.split_contents()

@@ -23,8 +23,8 @@ class TemplateTagTest(TestCase):
         context.setdefault('func', self.func)
         return Template(template).render(Context(context))
 
-    def test_cash_tag(self):
-        template = "{% load cash %}{% cash %}{{ func }}{% endcash %}"
+    def test_cachet_tag(self):
+        template = "{% load cachet %}{% cachet %}{{ func }}{% endcachet %}"
         self.assertEqual(self.func.call_count, 0)
         rendered = self.render_template(template)
 
@@ -34,8 +34,8 @@ class TemplateTagTest(TestCase):
         self.render_template(template)
         self.assertEqual(self.func.call_count, 1)
 
-    def test_cash_vary_on(self):
-        template = "{% load cash %}{% cash on foo %}{{ func }}{% endcash %}"
+    def test_cachet_vary_on(self):
+        template = "{% load cachet %}{% cachet on foo %}{{ func }}{% endcachet %}"
         self.assertEqual(self.func.call_count, 0)
 
         self.render_template(template, foo='bar')
@@ -50,8 +50,8 @@ class TemplateTagTest(TestCase):
         self.render_template(template, foo='baz')
         self.assertEqual(self.func.call_count, 2)
 
-    def test_cash_on_multiple(self):
-        template = "{% load cash %}{% cash on foo bar %}{{ func }}{% endcash %}"
+    def test_cachet_on_multiple(self):
+        template = "{% load cachet %}{% cachet on foo bar %}{{ func }}{% endcachet %}"
         self.assertEqual(self.func.call_count, 0)
 
         self.render_template(template, foo='bar', bar="a")
@@ -69,8 +69,8 @@ class TemplateTagTest(TestCase):
         self.render_template(template, foo='baz', bar="b")
         self.assertEqual(self.func.call_count, 3)
 
-    def test_cash_expiry(self):
-        template = "{% load cash %}{% cash 1 %}{{ func }}{% endcash %}"
+    def test_cachet_expiry(self):
+        template = "{% load cachet %}{% cachet 1 %}{{ func }}{% endcachet %}"
         self.assertEqual(self.func.call_count, 0)
 
         self.render_template(template)

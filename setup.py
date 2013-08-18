@@ -3,7 +3,7 @@ import sys
 
 from setuptools import setup
 
-version = __import__('cash').get_version()
+version = __import__('cachet').get_version()
 
 install_requires = ['Django>=1.3']
 tests_require = []
@@ -16,11 +16,11 @@ def read_file(filename):
     with open(os.path.join(os.path.dirname(__file__), filename)) as f:
         return f.read()
 
-setup(name='django-cash',
+setup(name='django-cachet',
       version=version,
       author="Rocky Meza",
       author_email="rockymeza@gmail.com",
-      url="https://github.com/fusionbox/django-cash",
+      url="https://github.com/fusionbox/django-cachet",
       keywords="django cache templatetag",
       description="Caching helpers for Django",
       long_description=read_file('README.rst'),
@@ -39,8 +39,8 @@ setup(name='django-cash',
       install_requires=install_requires,
       tests_require=tests_require,
       packages=[
-          'cash',
-          'cash.templatetags',
+          'cachet',
+          'cachet.templatetags',
       ],
 
       test_suite='testproject.runtests',

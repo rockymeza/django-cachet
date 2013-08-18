@@ -11,5 +11,5 @@ def runtests():
     # Stolen from django/core/management/commands/test.py
     TestRunner = get_runner(settings)
     test_runner = TestRunner(verbosity=1, interactive=True, failfast=False)
-    failures = test_runner.run_tests(['cash'])
+    failures = test_runner.run_tests(['cachet'])
     sys.exit(bool(failures))

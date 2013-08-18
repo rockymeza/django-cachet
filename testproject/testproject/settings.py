@@ -9,7 +9,7 @@ INSTALLED_APPS = (
 
     'testproject.testproject',
 
-    'cash',
+    'cachet',
 )
 
 DATABASES = {

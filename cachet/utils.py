@@ -12,7 +12,7 @@ try:
 except ImportError:  # Django < 1.5 (which means Python < 3)
     force_bytes = str
 
-TEMPLATE_FRAGMENT_KEY_TEMPLATE = 'template.cash.%s'
+TEMPLATE_FRAGMENT_KEY_TEMPLATE = 'template.cachet.%s'
 
 
 def make_template_fragment_key(fragment, vary_on=None):
